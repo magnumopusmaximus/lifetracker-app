@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Life Tracker</title>
+             <link rel="stylesheet" href="css/tutorial.css">
+    <link rel="stylesheet" href="css/base.css?v=2"> 
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/stats.css">
+    <link rel="stylesheet" href="css/tracker.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/overview.css">
+    <link rel="stylesheet" href="css/new-features.css">
+    <link rel="stylesheet" href="css/support.css">
+    <link rel="stylesheet" href="css/ads-system.css">
+        <link rel="stylesheet" href="css/footer.css">
+
+
+
+
+     <script src="https://unpkg.com/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
+
+</head>
+
+
+<body>
+    <div class="app-container" id="appContainer">
+        <!-- Habits Screen -->
+        <div class="screen" id="habitsScreen">
+            <div class="screen-header-wrapper">
+                <button class="back-btn" onclick="goToHome()"><</button>
+                <h1 class="screen-header">💪 Habits</h1>
+            </div>
+            <div class="habit-list" id="habitList"></div>
+        </div>
+
+<!-- Home Screen -->
+<div class="screen active" id="homeScreen">
+<div class="profile-section">
+    <button class="support-heart-btn" onclick="showSupportModal()">❤️</button>
+    <button class="remove-ads-btn" onclick="showRemoveAdsModal()">👑</button>
+    <button class="language-globe-btn" onclick="showLanguageModal()">🌐</button>
+    
+    <div class="profile-pic"><span id="profilePicContent">👤</span></div>
+    <div class="profile-name">Your Name</div>
+    <div class="profile-subtitle" id="profileSubtitle">Stay strong and focused!</div>
+</div>
+
+
+<div class="stats-container">
+    
+    <!-- STRENGTH -->
+    <div class="stat-card" data-stat="strength" onclick="goToScreen(3)">
+        <div class="stat-row">
+            <div class="stat-title">💪 <span id="statStrength">Strength</span></div>
+            <div class="stat-value" id="strengthValue">0.0</div>
+            <div class="stat-bar">
+                <div class="stat-fill stat-fill-strength" id="strengthBar" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STAMINA -->
+    <div class="stat-card" data-stat="stamina" onclick="goToScreen(2)">
+        <div class="stat-row">
+            <div class="stat-title">⚡ <span id="statStamina">Stamina</span></div>
+            <div class="stat-value" id="staminaValue">0.0</div>
+            <div class="stat-bar">
+                <div class="stat-fill stat-fill-stamina" id="staminaBar" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HABITS -->
+    <div class="stat-card" data-stat="habits" onclick="goToScreen(0)">
+        <div class="stat-row">
+            <div class="stat-title">✅ <span id="statHabits">Habits</span></div>
+            <div class="stat-value" id="habitsValue">0.0</div>
+            <div class="stat-bar">
+                <div class="stat-fill stat-fill-habits" id="habitsBar" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADDICTIONS -->
+    <div class="stat-card" data-stat="addictions" onclick="goToScreen(5)">
+        <div class="stat-row">
+            <div class="stat-title">🚫 <span id="statAddictions">Addictions</span></div>
+            <div class="stat-value" id="addictionsValue">0.0</div>
+            <div class="stat-bar">
+                <div class="stat-fill stat-fill-addictions" id="addictionsBar" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FINANCES -->
+    <div class="stat-card" data-stat="finances" onclick="goToScreen(4)">
+        <div class="stat-row">
+            <div class="stat-title">💰 <span id="statFinances">Finances</span></div>
+            <div class="stat-value" id="financesValue">0.0</div>
+            <div class="stat-bar">
+                <div class="stat-fill stat-fill-finances" id="financesBar" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="swipe-hint" id="swipeHint">Tap on a stat for more details</div>
+
+    <!-- Quick Menu -->
+    <div class="quick-menu">
+        <button class="quick-menu-btn" onclick="showWeeklySummary()">
+            <span class="quick-menu-icon">📊</span>
+            <span class="quick-menu-label" id="quickWeek">Week</span>
+        </button>
+        <button class="quick-menu-btn" onclick="showAchievementsModal()">
+            <span class="quick-menu-icon">🏆</span>
+            <span class="quick-menu-label" id="quickAchievements">Achievements</span>
+        </button>
+        <button class="quick-menu-btn" onclick="showMoodJournal()">
+            <span class="quick-menu-icon">😊</span>
+            <span class="quick-menu-label" id="quickMood">Mood</span>
+        </button>
+    </div>
+
+    <!-- Year Overview -->
+    <div class="year-overview-section">
+        <div class="year-overview-header">
+            <h2 class="year-overview-title" id="yearOverviewTitle">Year Overview 2025</h2>
+            <div class="view-toggle">
+                <button class="toggle-btn active" data-view="graph" onclick="switchView('graph')">📈</button>
+                <button class="toggle-btn" data-view="heatmap" onclick="switchView('heatmap')">🔥</button>
+                <button class="toggle-btn" data-view="personality" onclick="switchView('personality')">⭐</button>
+            </div>
+        </div>
+
+        <!-- Graph View -->
+        <div id="graphView" class="overview-view active">
+            <canvas id="yearChart" width="400" height="200"></canvas>
+            <div class="chart-legend">
+                <button class="legend-btn active" data-dataset="strength" onclick="toggleDataset('strength')">
+                    <span class="legend-color strength-color"></span>
+                    <span id="legendStrength">Strength</span>
+                </button>
+                <button class="legend-btn active" data-dataset="stamina" onclick="toggleDataset('stamina')">
+                    <span class="legend-color stamina-color"></span>
+                    <span id="legendStamina">Stamina</span>
+                </button>
+                <button class="legend-btn active" data-dataset="habits" onclick="toggleDataset('habits')">
+                    <span class="legend-color habits-color"></span>
+                    <span id="legendHabits">Habits</span>
+                </button>
+                <button class="legend-btn active" data-dataset="addictions" onclick="toggleDataset('addictions')">
+                    <span class="legend-color addictions-color"></span>
+                    <span id="legendAddictions">Addictions</span>
+                </button>
+                <button class="legend-btn active" data-dataset="finances" onclick="toggleDataset('finances')">
+                    <span class="legend-color finances-color"></span>
+                    <span id="legendFinances">Finances</span>
+                </button>
+            </div>
+
+<!-- ╔════════════════════════════════════════════════════════════════════════════╗ -->
+<!-- ║  📥 PDF EXPORT SECTION - Kompakt mit Translations                        ║ -->
+<!-- ║  Sprache wählen → Download starten                                        ║ -->
+<!-- ╚════════════════════════════════════════════════════════════════════════════╝ -->
+
+<!-- ╔════════════════════════════════════════════════════════════════════════════╗ -->
+<!-- ║  📥 PDF EXPORT SECTION - Kompakt mit Translations                        ║ -->
+<!-- ║  Sprache wählen → Download starten                                        ║ -->
+<!-- ╚════════════════════════════════════════════════════════════════════════════╝ -->
+
+<section class="pdf-export-section" id="pdfExportSection">
+    <div class="pdf-export-container">
+        <!-- Compact Header -->
+        <div class="pdf-export-header">
+            <div class="pdf-export-icon">📄</div>
+            <div>
+                <h3 data-i18n="pdfDownloadTitle">Download Annual Report</h3>
+                <p data-i18n="pdfDownloadDesc">12-page PDF with all your data</p>
+            </div>
+        </div>
+
+        <!-- Quick Features List -->
+        <div class="pdf-quick-features">
+            <div class="feature-item" data-i18n="pdfFeature1">📊 Heatmaps & Analytics</div>
+            <div class="feature-item" data-i18n="pdfFeature2">🎯 Goals & Insights</div>
+            <div class="feature-item" data-i18n="pdfFeature3">💡 Personal Summary</div>
+            <div class="feature-item" data-i18n="pdfFeature4">🎨 Full Color Design</div>
+        </div>
+
+        <!-- Language Selection - Compact -->
+        <div class="pdf-language-selector">
+            <label data-i18n="selectLanguage">Select Language:</label>
+            <div class="language-buttons">
+                <button class="pdf-lang-btn" onclick="selectPdfLanguage('de')" title="Deutsch">
+                    🇩🇪
+                </button>
+                <button class="pdf-lang-btn" onclick="selectPdfLanguage('en')" title="English">
+                    🇬🇧
+                </button>
+                <button class="pdf-lang-btn" onclick="selectPdfLanguage('ru')" title="Русский">
+                    🇷🇺
+                </button>
+                <button class="pdf-lang-btn" onclick="selectPdfLanguage('es')" title="Español">
+                    🇪🇸
+                </button>
+            </div>
+        </div>
+
+        <!-- Download Button - Disabled by default -->
+        <button class="pdf-export-btn disabled" 
+                id="pdfDownloadBtn"
+                onclick="exportPdfWithSelectedLanguage()"
+                disabled>
+            <span>📥</span>
+            <span data-i18n="pdfDownloadBtn">Generate PDF</span>
+        </button>
+
+        <!-- Pro Badge -->
+        <div class="pdf-pro-badge" data-i18n="proVersion">💎 Pro Feature</div>
+    </div>
+</section>
+
+<!-- ╔════════════════════════════════════════════════════════════════════════════╗ -->
+    <!-- Footer Section - Privacy & Terms -->
+    <div class="app-footer">
+        <a class="footer-link" onclick="document.getElementById('privacyModal').style.display='flex';">Privacy Policy</a>
+        <div class="footer-divider"></div>
+        <a class="footer-link" onclick="document.getElementById('termsModal').style.display='flex';">Terms</a>
+        <div class="footer-divider"></div>
+        <span class="footer-credit">   2025 LifeTracker</span>
+    </div>
+
+<!-- ║  COMPACT STYLES                                                           ║ -->
+<!-- ╚════════════════════════════════════════════════════════════════════════════╝ -->
+
+<style>
+/* PDF Export Section - Compact */
+.pdf-export-section {
+    padding: 14px;
+    background: #16213e;
+    border: 2px solid #2a3f5f;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    margin-top: 40px;
+}
+
+.pdf-export-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Compact Header */
+.pdf-export-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pdf-export-icon {
+    font-size: 28px;
+    min-width: 28px;
+    flex-shrink: 0;
+}
+
+.pdf-export-header h3 {
+    color: #ffffff;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.pdf-export-header p {
+    color: #8b8b9e;
+    margin: 2px 0 0 0;
+    font-size: 12px;
+    line-height: 1.2;
+}
+
+/* Quick Features List */
+.pdf-quick-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.feature-item {
+    padding: 8px;
+    background: #1f3675;
+
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 6px;
+    color: #ccc;
+    font-size: 12px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.feature-item:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: rgba(0, 212, 255, 0.4);
+}
+
+/* Language Selector - Compact */
+.pdf-language-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pdf-language-selector label {
+    color: #8b8b9e;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 10px;
+}
+
+.language-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.pdf-lang-btn {
+    padding: 6px 8px;
+    background: linear-gradient(135deg, #16213e 0%, #1a2842 100%);
+    border: 2px solid #2a3f5f;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    flex-shrink: 0;
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pdf-lang-btn:hover {
+    border-color: #00d4ff;
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 212, 255, 0.05));
+}
+
+.pdf-lang-btn.active {
+    border-color: #00d4ff;
+    background: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.pdf-lang-btn:active:not(.active) {
+    transform: scale(0.95);
+}
+
+/* Download Button */
+.pdf-export-btn {
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: inherit;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.pdf-export-btn:hover:not(.disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+}
+
+.pdf-export-btn:active:not(.disabled) {
+    transform: scale(0.98);
+}
+
+/* Disabled State */
+.pdf-export-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(0.8);
+}
+
+.pdf-export-btn.disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+}
+
+.pdf-export-btn.enabled {
+    opacity: 1;
+    filter: grayscale(0);
+}
+
+/* Pro Badge - Compact */
+.pdf-pro-badge {
+    font-size: 25px;
+    font-weight: 700;
+    color: #f7b731;
+    background: rgba(247, 184, 49, 0.267);
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(247, 183, 49, 0.3);
+    text-align: center;
+    letter-spacing: 0.2px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .pdf-export-section {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .pdf-export-header h3 {
+        font-size: 14px;
+    }
+
+    .pdf-export-header p {
+        font-size: 11px;
+    }
+
+    .pdf-quick-features {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+
+    .feature-item {
+        padding: 6px;
+        font-size: 11px;
+    }
+
+    .pdf-language-selector {
+        gap: 6px;
+    }
+
+    .pdf-language-selector label {
+        font-size: 10px;
+    }
+
+    .language-buttons {
+        gap: 4px;
+    }
+
+    .pdf-lang-btn {
+        padding: 5px 6px;
+        font-size: 13px;
+        min-width: 36px;
+    }
+
+    .pdf-export-btn {
+        padding: 9px 14px;
+        font-size: 13px;
+        gap: 5px;
+    }
+
+    .pdf-pro-badge {
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+}
+
+@media (max-width: 360px) {
+    .pdf-language-selector {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .language-buttons {
+        width: 100%;
+    }
+
+    .pdf-lang-btn {
+        flex: 1;
+    }
+}
+</style>
+
+
+        </div>
+
+
+
+        <!-- Heatmap View -->
+        <div id="heatmapView" class="overview-view">
+            <div class="heatmap-explanation">
+                <strong id="heatmapHow">💡 How does the Heatmap work?</strong><br>
+                <span id="heatmapDesc">Each day of the year is colored based on your activity:</span><br>
+                <span id="heatmapLegend">• Empty: No activity, Bright: 3+ activities</span>
+            </div>
+            <div id="heatmapContainer"></div>
+            <div class="heatmap-stats-horizontal">
+                <div class="heatmap-stat">
+                    <div class="heatmap-stat-value" id="heatmapTotalDays">0</div>
+                    <div class="heatmap-stat-label" id="heatmapActiveDaysLabel">Active Days</div>
+                </div>
+                <div class="heatmap-stat">
+                    <div class="heatmap-stat-value" id="heatmapStreak">0</div>
+                    <div class="heatmap-stat-label" id="heatmapStreakLabel">Streak</div>
+                </div>
+                <div class="heatmap-stat">
+                    <div class="heatmap-stat-value" id="heatmapBestMonth">-</div>
+                    <div class="heatmap-stat-label" id="heatmapBestMonthLabel">Best Month</div>
+                </div>
+                <div class="heatmap-stat">
+                    <div class="heatmap-stat-value" id="heatmapAvgWeek">0</div>
+                    <div class="heatmap-stat-label" id="heatmapAvgWeekLabel">Ø / Week</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personality Chart View -->
+        <div id="personalityView" class="overview-view">
+
+            <canvas id="personalityChart" width="300" height="300"></canvas>
+            <div class="personality-insights" id="personalityInsights"></div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+
+
+        <!-- Stamina Screen -->
+        <div class="screen" id="staminaScreen">
+            <div class="screen-header-wrapper">
+                <button class="back-btn" onclick="goToHome()"><</button>
+                <h1 class="screen-header">⚡ Stamina</h1>
+            </div>
+            
+            <div class="goal-card goal-card-stamina" onclick="showStaminaGoalModal()">
+                <div class="goal-label">Monthly Goal</div>
+                <div class="goal-value" id="staminaGoalDisplay">Set Goal</div>
+                <div class="goal-progress" id="staminaGoalProgress">0 / 0 Trainings</div>
+            </div>
+
+            <div class="training-list" id="staminaList"></div>
+        </div>
+
+        <!-- Strength Screen -->
+        <div class="screen" id="strengthScreen">
+            <div class="screen-header-wrapper">
+                <button class="back-btn" onclick="goToHome()"><</button>
+                <h1 class="screen-header">💪 Strength</h1>
+            </div>
+            
+            <div class="goal-card goal-card-strength" onclick="showStrengthGoalModal()">
+                <div class="goal-label">Monthly Goal</div>
+                <div class="goal-value" id="strengthGoalDisplay">Set Goal</div>
+                <div class="goal-progress" id="strengthGoalProgress">0 / 0 Trainings</div>
+            </div>
+
+            <div class="training-list" id="strengthList"></div>
+        </div>
+
+        <!-- Finance Screen -->
+        <div class="screen" id="financeScreen">
+            <div class="screen-header-wrapper">
+                <button class="back-btn" onclick="goToHome()"><</button>
+                <h1 class="screen-header">💰 Finances</h1>
+            </div>
+            
+            <div class="goal-card goal-card-finance" onclick="showFinanceGoalModal()">
+                <div class="goal-label">Monthly Savings Goal</div>
+                <div class="goal-value" id="financeGoalDisplay">Set Goal</div>
+                <div class="goal-progress" id="financeGoalProgress">€0 / €0</div>
+            </div>
+
+<button onclick="showFinanzplanModal()" style="text-align: left; background: linear-gradient(135deg, #32d089 0%, #23a86a 100%); width: 100%; padding: 14px; border: 0px solid #2a3f5f00; border-radius: 12px; color: #ffffff; font-weight: 600; cursor: pointer; margin-bottom: 18px; font-size: 15px;" id="financeScreenPlanBtn"></button>
+
+            <div class="finance-summary">
+                <div class="finance-stat">
+                    <div class="finance-stat-label">💰 Total</div>
+                    <div class="finance-stat-value" id="totalSaved">€0</div>
+                </div>
+                <div class="finance-stat">
+                    <div class="finance-stat-label">📅 This Month</div>
+                    <div class="finance-stat-value" id="thisMonthSaved">€0</div>
+                </div>
+            </div>
+
+            <div class="training-list" id="financeList"></div>
+        </div>
+
+        <!-- Addictions Screen -->
+        <div class="screen" id="addictionsScreen">
+            <div class="screen-header-wrapper">
+                <button class="back-btn" onclick="goToHome()"><</button>
+                <h1 class="screen-header">🚫 Addictions</h1>
+            </div>
+            <div class="tracker-list" id="trackerList"></div>
+        </div>
+    </div>
+
+    <!-- Add Buttons -->
+    <button class="add-btn" onclick="showAddHabitModal()" style="display: none;" data-screen="habits">+</button>
+    <button class="add-btn" onclick="showAddStaminaModal()" style="display: none;" data-screen="stamina">+</button>
+    <button class="add-btn" onclick="showAddStrengthModal()" style="display: none;" data-screen="strength">+</button>
+    <button class="add-btn" onclick="showAddFinanceModal()" style="display: none;" data-screen="finance">+</button>
+    <button class="add-btn" onclick="showAddTrackerModal()" style="display: none;" data-screen="addictions">+</button>
+
+   <!-- === STAMINA MODALS === -->
+    <div class="modal" id="staminaGoalModal">
+        <div class="modal-content">
+            <h2 class="modal-title">⚡ Stamina Goal</h2>
+<div class="modal-label" data-i18n="trainingsPerMonth">Trainings per month</div>
+            <input type="number" class="modal-input" id="staminaGoalInput" placeholder="e.g. 20" min="1">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeStaminaGoalModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="saveStaminaGoal()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="staminaModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Add Training</h2>
+            <div class="modal-label">Training Type:</div>
+            <select class="modal-input" id="staminaType">
+                <option value="Calisthenics">🤸 Calisthenics</option>
+                <option value="Running">🏃 Running</option>
+                <option value="Cardio">❤️ Cardio</option>
+                <option value="HIIT">⚡ HIIT</option>
+            </select>
+            <div class="modal-label">Notes:</div>
+            <input type="text" class="modal-input" id="staminaNotes" placeholder="e.g. 5km, 30 min">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeStaminaModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="addStamina()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editStaminaModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Edit Training</h2>
+            <div class="modal-label">Training Type:</div>
+            <select class="modal-input" id="editStaminaType">
+                <option value="Calisthenics">🤸 Calisthenics</option>
+                <option value="Running">🏃 Running</option>
+                <option value="Cardio">❤️ Cardio</option>
+                <option value="HIIT">⚡ HIIT</option>
+            </select>
+            <div class="modal-label">Notes:</div>
+            <input type="text" class="modal-input" id="editStaminaNotes" placeholder="e.g. 5km, 30 min">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeEditStaminaModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="saveStaminaEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- === STRENGTH MODALS === -->
+    <div class="modal" id="strengthGoalModal">
+        <div class="modal-content">
+            <h2 class="modal-title">💪 Strength Goal</h2>
+<div class="modal-label" data-i18n="trainingsPerMonth">Trainings per month</div>
+            <input type="number" class="modal-input" id="strengthGoalInput" placeholder="e.g. 16" min="1">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeStrengthGoalModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="saveStrengthGoal()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="strengthModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Add Training</h2>
+            <div class="modal-label">Training Type:</div>
+            <select class="modal-input" id="strengthType">
+                <option value="Weight Training">🏋️ Weight Training</option>
+                <option value="Gym">💪 Gym</option>
+                <option value="Bodyweight">🤸 Bodyweight</option>
+                <option value="Powerlifting">⚡ Powerlifting</option>
+            </select>
+            <div class="modal-label">Notes:</div>
+            <input type="text" class="modal-input" id="strengthNotes" placeholder="e.g. Chest/Triceps, 90kg Bench">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeStrengthModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="addStrength()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editStrengthModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Edit Training</h2>
+            <div class="modal-label">Training Type:</div>
+            <select class="modal-input" id="editStrengthType">
+                <option value="Weight Training">🏋️ Weight Training</option>
+                <option value="Gym">💪 Gym</option>
+                <option value="Bodyweight">🤸 Bodyweight</option>
+                <option value="Powerlifting">⚡ Powerlifting</option>
+            </select>
+            <div class="modal-label">Notes:</div>
+            <input type="text" class="modal-input" id="editStrengthNotes" placeholder="e.g. Chest/Triceps, 90kg Bench">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeEditStrengthModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="saveStrengthEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- === FINANCE MODALS === -->
+    <div class="modal" id="financeGoalModal">
+        <div class="modal-content">
+            <h2 class="modal-title">💰 Savings Goal</h2>
+            <div class="modal-label">Monthly savings goal (€):</div>
+            <input type="number" class="modal-input" id="financeGoalInput" placeholder="e.g. 500" min="0" step="10">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeFinanceGoalModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="saveFinanceGoal()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="financeModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Add Savings</h2>
+            <div class="modal-label">Amount (€):</div>
+            <input type="number" class="modal-input" id="financeAmount" placeholder="Amount" step="0.01">
+            <div class="modal-label">Notes (optional):</div>
+            <input type="text" class="modal-input" id="financeNotes" placeholder="e.g. Salary, Side hustle">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeFinanceModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="addFinance()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="finanzplanModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header-custom">
+                <button class="modal-back-btn" onclick="closeFinanzplanModal()"><</button>
+                <h2 class="modal-title-inline" id="finanzplanTitle"></h2>
+            </div>
+            <div id="finanzplanContent"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="editFinanceModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Edit Savings</h2>
+            <div class="modal-label">Amount (€):</div>
+            <input type="number" class="modal-input" id="editFinanceAmount" placeholder="Amount" step="0.01">
+            <div class="modal-label">Notes (optional):</div>
+            <input type="text" class="modal-input" id="editFinanceNotes" placeholder="e.g. Salary, Side hustle">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeEditFinanceModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="saveFinanceEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- === TRACKER MODALS - UPDATED === -->
+    <div class="modal" id="trackerModal">
+        <div class="modal-content">
+            <h2 class="modal-title">New Addiction Tracker</h2>
+            
+            <div class="modal-label">Name:</div>
+            <input type="text" class="modal-input" id="trackerName" placeholder="Name (e.g. Alcohol)">
+            
+    <div class="modal-label" id="trackerCostPerWeekLabel">Cost per week:</div>
+            <input type="number" class="modal-input" id="trackerCost" placeholder="€" step="0.01">
+            
+            <div class="modal-label">Mode:</div>
+            <select class="modal-input" id="trackerMode" onchange="updateTrackerModalFields()">
+                <option value="clean">🚫 Clean Mode (Timer)</option>
+                <option value="reduction">📉 Reduction Mode (Calendar)</option>
+            </select>
+            
+
+            
+            <div id="trackerDailyLimitContainer" style="display: none;">
+                <div class="modal-label">Daily Limit:</div>
+                <input type="number" class="modal-input" id="trackerDailyLimit" placeholder="e.g. 3" min="1" value="3">
+                
+                <div class="modal-label">Monthly Goal (days under limit):</div>
+                <input type="number" class="modal-input" id="trackerMonthlyGoal" placeholder="e.g. 20" min="1" value="20">
+            </div>
+            
+            <div class="modal-checkbox-row">
+                <input type="checkbox" id="trackerShowMoney" checked>
+                <label for="trackerShowMoney">Show money saved</label>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeTrackerModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="addTracker()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editTrackerModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Edit Tracker</h2>
+            
+    <div class="modal-label" id="editTrackerNameLabel">Name:</div>
+            <input type="text" class="modal-input" id="editTrackerName" placeholder="Name">
+            
+    <div class="modal-label" id="financeCostPerWeekLabel">Cost per week:</div>
+            <input type="number" class="modal-input" id="editTrackerCost" placeholder="€" step="0.01">
+            
+            <div class="modal-label">Mode:</div>
+            <select class="modal-input" id="editTrackerMode" onchange="updateEditTrackerModalFields()">
+                <option value="clean">🚫 Clean Mode (Timer)</option>
+                <option value="reduction">📉 Reduction Mode (Calendar)</option>
+            </select>
+            
+
+            
+            <div id="editTrackerDailyLimitContainer" style="display: none;">
+                <div class="modal-label">Daily Limit:</div>
+                <input type="number" class="modal-input" id="editTrackerDailyLimit" placeholder="e.g. 3" min="1">
+                
+                <div class="modal-label">Monthly Goal (days under limit):</div>
+                <input type="number" class="modal-input" id="editTrackerMonthlyGoal" placeholder="e.g. 20" min="1">
+            </div>
+            
+            <div class="modal-checkbox-row">
+                <input type="checkbox" id="editTrackerShowMoney">
+                <label for="editTrackerShowMoney">Show money saved</label>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeEditTrackerModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="saveTrackerEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editTrackerModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Edit Tracker</h2>
+            
+            <div class="modal-label">Name:</div>
+            <input type="text" class="modal-input" id="editTrackerName" placeholder="Name">
+            
+<div class="modal-label" id="editTrackerCostPerWeekLabel">Cost per week:</div>
+            <input type="number" class="modal-input" id="editTrackerCost" placeholder="€" step="0.01">
+            
+            <div class="modal-label">Mode:</div>
+            <select class="modal-input" id="editTrackerMode" onchange="updateEditTrackerModalFields()">
+                <option value="clean">🚫 Clean Mode (Timer)</option>
+                <option value="reduction">📉 Reduction Mode (Calendar)</option>
+            </select>
+            
+
+            
+            <div id="editTrackerDailyLimitContainer" style="display: none;">
+                <div class="modal-label">Daily Limit:</div>
+                <input type="number" class="modal-input" id="editTrackerDailyLimit" placeholder="e.g. 3" min="1">
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeEditTrackerModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="saveTrackerEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addAmountModal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="addAmountModalTitle">Add Amount</h2>
+            <div class="modal-label">Amount today:</div>
+            <input type="number" class="modal-input" id="addAmountValue" placeholder="e.g. 5" min="0" autofocus>
+<div class="modal-hint" id="addAmountHint">💡 Enter 0 to delete</div>
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeAddAmountModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="saveAmount()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="trackerDetailModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header-custom">
+                <button class="modal-back-btn" onclick="closeTrackerDetailModal()"><</button>
+                <h2 class="modal-title-inline" id="trackerDetailTitle">Tracker Details</h2>
+            </div>
+            
+            <div class="tracker-detail-stats">
+                <div class="tracker-detail-stat-card">
+                    <div class="tracker-detail-stat-value" id="trackerYearTotal">0</div>
+                    <div class="tracker-detail-stat-label">Year Total</div>
+                </div>
+                <div class="tracker-detail-stat-card">
+                    <div class="tracker-detail-stat-value" id="trackerAvgMonth">0</div>
+                    <div class="tracker-detail-stat-label">Avg/Month</div>
+                </div>
+            </div>
+            
+            <div class="tracker-detail-stats">
+                <div class="tracker-detail-stat-card">
+                    <div class="tracker-detail-stat-value" id="trackerCurrentMonth">0</div>
+                    <div class="tracker-detail-stat-label">Current Month</div>
+                </div>
+                <div class="tracker-detail-stat-card">
+                    <div class="tracker-detail-stat-value" id="trackerAvgDay">0</div>
+                    <div class="tracker-detail-stat-label">Avg/Day</div>
+                </div>
+            </div>
+            
+            <div class="tracker-chart-container">
+                <canvas id="trackerDetailChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- === HABIT MODALS === -->
+    <div class="modal" id="habitModal">
+        <div class="modal-content">
+            <h2 class="modal-title">New Habit</h2>
+            <div class="modal-label">Habit Name:</div>
+            <input type="text" class="modal-input" id="habitName" placeholder="Habit Name">
+            <div class="modal-label">Monthly Goal (Days):</div>
+            <input type="number" class="modal-input" id="habitGoal" placeholder="e.g. 20" min="1" max="31" value="20">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeHabitModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="addHabit()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editHabitModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Edit Habit</h2>
+            <div class="modal-label">Habit Name:</div>
+            <input type="text" class="modal-input" id="editHabitName" placeholder="Habit Name">
+            <div class="modal-label">Monthly Goal (Days):</div>
+            <input type="number" class="modal-input" id="editHabitGoal" placeholder="e.g. 20" min="1" max="31">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeEditHabitModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="saveHabitEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="habitDetailModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header-custom">
+                <button class="modal-back-btn" onclick="closeHabitDetailModal()"><</button>
+                <h2 class="modal-title-inline" id="habitDetailTitle">Habit Details</h2>
+            </div>
+            
+            <div class="habit-detail-stats">
+                <div class="habit-detail-stat-card">
+                    <div class="habit-detail-stat-value" id="habitYearTotal">0</div>
+                    <div class="habit-detail-stat-label">Total Days</div>
+                </div>
+                <div class="habit-detail-stat-card">
+                    <div class="habit-detail-stat-value" id="habitYearGoal">0</div>
+                    <div class="habit-detail-stat-label">Year Goal</div>
+                </div>
+                <div class="habit-detail-stat-card">
+                    <div class="habit-detail-stat-value" id="habitSuccessRate">0%</div>
+                    <div class="habit-detail-stat-label">Success Rate</div>
+                </div>
+            </div>
+            
+            <div class="habit-current-month">
+                <div class="habit-current-label">Current Month</div>
+                <div class="habit-current-value" id="habitMonthProgress">0 / 0 (0%)</div>
+            </div>
+            
+            <div class="habit-chart-container">
+                <canvas id="habitDetailChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- === OTHER MODALS (QuickMenuModals) === -->
+    <div class="modal" id="weeklySummaryModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header-custom">
+                <button class="modal-back-btn" onclick="closeWeeklySummary()"><</button>
+                <h2 class="modal-title-inline">Weekly Summary</h2>
+            </div>
+            <div id="weeklySummaryContent"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="achievementsModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header-custom">
+                <button class="modal-back-btn" onclick="closeAchievementsModal()"><</button>
+                <h2 class="modal-title-inline">Achievements</h2>
+            </div>
+            <div id="achievementsCount" class="achievements-count">0 / 0 <span>unlocked</span></div>
+            <div id="achievementsList" class="achievements-list"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="moodJournalModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header-custom">
+                <button class="modal-back-btn" onclick="closeMoodJournal()"><</button>
+                <h2 class="modal-title-inline">Mood</h2>
+            </div>
+            <div id="moodContent"></div>
+        </div>
+    </div>
+
+    <!-- 2. Language Modal - DIREKT VOR </body> einfügen -->
+    <div class="modal" id="languageModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Choose Language</h2>
+            <div class="language-options">
+                <button class="language-option-btn" onclick="switchLanguage('de')">
+                    <div class="language-flag">DE</div>
+                    <div class="language-name">Deutsch</div>
+                </button>
+                <button class="language-option-btn" onclick="switchLanguage('en')">
+                    <div class="language-flag">EN</div>
+                    <div class="language-name">English</div>
+                </button>
+                <button class="language-option-btn" onclick="switchLanguage('es')">
+                    <div class="language-flag">ES</div>
+                    <div class="language-name">Español</div>
+                </button>
+                <button class="language-option-btn" onclick="switchLanguage('ru')">
+                    <div class="language-flag">RU</div>
+                    <div class="language-name">Русский</div>
+                </button>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeLanguageModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Modal -->
+    <div class="modal" id="supportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="supportTitle">Support Developer</h2>
+                <button class="modal-close" onclick="closeSupportModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="supportMessage">Watch videos to support the developer!</p>
+                <div id="adsWatchedCountDisplay" style="text-align: center; margin: 15px 0; padding: 10px; background: rgba(0,212,255,0.1); border-radius: 8px;">
+                    <p>🎬 <strong id="adsWatchedCount">0</strong> videos watched today</p>
+                </div>
+            </div>
+            <div class="modal-footer" style="flex-direction: column; gap: 10px;">
+                <button class="btn-primary" onclick="watchVideoAd('quick')" style="width: 100%; background: linear-gradient(135deg, #0099ff 0%, #00d4ff 100%);">
+                    ▶ Quick Support • 1 Video
+                </button>
+                <button class="btn-primary" onclick="watchVideoAd('normal')" style="width: 100%; background: linear-gradient(135deg, #00d2a0 0%, #00b894 100%);">
+                    ▶▶ Normal Support • 2 Videos
+                </button>
+                <button class="btn-primary" onclick="watchVideoAd('extended')" style="width: 100%; background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);">
+                    ▶▶▶ Extended Support • 3 Videos
+                </button>
+                <button class="modal-btn secondary" onclick="closeSupportModal()" style="width: 100%;">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="app-container" id="appContainer">
+        <!-- Rest vom HTML... -->
+
+        <!-- Mood Heatmap Modal -->
+        <div class="modal" id="moodHeatmapModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header-custom">
+                <button class="modal-back-btn" onclick="closeMoodHeatmap()"><</button>
+                <h2 class="modal-title-inline" id="moodHeatmapTitle">Mood Year 2025</h2>
+            </div>
+            <div id="moodHeatmapContent"></div>
+        </div>
+
+    </div>
+
+
+    <div class="modal" id="editTrackerDayModal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="editTrackerDayTitle">Edit Day</h2>
+            <div class="modal-label" id="editTrackerDayAmountLabel">Amount:</div>
+            <input type="number" class="modal-input" id="editTrackerDayAmount" placeholder="0" min="0" autofocus>
+    <div class="modal-hint" id="editTrackerDayHint">💡 Enter 0 to delete</div>
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" id="editTrackerDayCancel" onclick="closeEditTrackerDayModal()">Cancel</button>
+                <button class="modal-btn primary" id="editTrackerDaySave" onclick="saveTrackerDay()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+<div id="privacyModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Datenschutzerklärung</h2>
+            <button class="modal-close" onclick="document.getElementById('privacyModal').style.display='none';">&times;</button>
+        </div>
+        <div class="modal-body">
+            <h3>LifeTracker - Persönlicher Assistent</h3>
+            <p><em>Zuletzt aktualisiert: Oktober 2025</em></p>
+
+            <h4>1. Verantwortlicher</h4>
+            <p>LifeTracker Team<br>Kontakt: glockenhammer3301+support@gmail.com</p>
+
+            <h4>2. Daten die wir sammeln</h4>
+            <h5>Daten die du selbst eingibst:</h5>
+            <ul>
+                <li>Workouts (Stamina/Strength)</li>
+                <li>Gewohnheiten</li>
+                <li>Stimmungstagebuch</li>
+                <li>Finanzielle Einträge</li>
+                <li>Tracker & Achievements</li>
+                <li>Spracheinstellung</li>
+            </ul>
+            <h5>Automatisch erfasste Daten:</h5>
+            <ul>
+                <li>Browser-Typ und Version</li>
+                <li>Zeitstempel von Aktivitäten</li>
+                <li>Lokale Speicherdaten (localStorage)</li>
+            </ul>
+
+            <h4>3. Wie wir deine Daten nutzen</h4>
+            <p>Wir nutzen deine Daten NUR um:</p>
+            <ul>
+                <li>Die App zu verbessern</li>
+                <li>Dir personalisierte Statistiken zu zeigen</li>
+                <li>PDF-Reports zu erstellen</li>
+                <li>Fehler zu beheben</li>
+            </ul>
+
+            <h4>4. Datenspeicherung</h4>
+            <ul>
+                <li><strong>Lokal:</strong> Alle Daten werden auf DEINEM Gerät gespeichert (localStorage)</li>
+                <li><strong>Auf Servern:</strong> Wir speichern KEINE persönlichen Daten auf unseren Servern</li>
+                <li><strong>Backups:</strong> Du bist selbst verantwortlich für Backups</li>
+            </ul>
+
+            <h4>5. Daten die wir NICHT sammeln</h4>
+            <ul>
+                <li>❌ Keine Standort-Daten</li>
+                <li>❌ Keine Kontakt-Daten (Email/Telefon) ohne Zustimmung</li>
+                <li>❌ Keine Kreditkarten-Daten</li>
+                <li>❌ Keine Biometrie-Daten</li>
+            </ul>
+
+            <h4>6. Dritte Parteien</h4>
+            <p>Wir geben deine Daten NICHT weiter an Werbe-Partner, Daten-Broker oder andere Unternehmen.</p>
+            <p><strong>Ausnahmen:</strong></p>
+            <ul>
+                <li>Analytik (Google Analytics) - nur wenn aktiviert</li>
+                <li>Cloud-Services - nur wenn du dich anmeldest</li>
+            </ul>
+
+            <h4>7. Deine Rechte (GDPR)</h4>
+            <p>Du hast das Recht auf:</p>
+            <ul>
+                <li>✅ Auskunft über deine Daten</li>
+                <li>✅ Löschung deiner Daten</li>
+                <li>✅ Export deiner Daten</li>
+                <li>✅ Widersprich der Verarbeitung</li>
+            </ul>
+            <p><strong>Kontakt:</strong> glockenhammer3301+privacy@gmail.com</p>
+
+            <h4>8. Cookies & LocalStorage</h4>
+            <p>Wir nutzen: Session Cookies (temporär) und LocalStorage (in deinem Browser). Du kannst diese jederzeit löschen.</p>
+
+            <h4>9. Sicherheit</h4>
+            <ul>
+                <li>✅ Daten sind verschlüsselt</li>
+                <li>✅ HTTPS wird verwendet</li>
+                <li>✅ Regelmäßige Sicherheits-Checks</li>
+            </ul>
+
+            <h4>10. Änderungen</h4>
+            <p>Wir können diese Policy jederzeit ändern. Wir werden dich benachrichtigen wenn wir das tun.</p>
+
+            <p style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px;">
+                <strong>Fragen?</strong> Kontaktiere uns: glockenhammer3301+support@gmail.com
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="document.getElementById('privacyModal').style.display='none';">Verstanden</button>
+        </div>
+    </div>
+</div>
+
+    <!-- Terms of Service Modal -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h2 class="modal-title">Nutzungsbedingungen</h2>
+                <button class="modal-close" onclick="document.getElementById('termsModal').style.display='none';">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 20px; font-size: 14px; line-height: 1.6;">
+                <h3>LifeTracker - Persönlicher Assistent</h3>
+                <p><em>Zuletzt aktualisiert: Oktober 2025</em></p>
+
+                <h4>1. Akzeptanz der Bedingungen</h4>
+                <p>Durch die Nutzung von LifeTracker akzeptierst du diese Bedingungen. Wenn du nicht einverstanden bist, nutze die App nicht.</p>
+
+                <h4>2. Lizenz zur Nutzung</h4>
+                <p>Wir geben dir eine begrenzte, nicht-exklusive Lizenz zur Nutzung der App für persönliche, nicht-kommerzielle Zwecke auf Geräten die du besitzt/kontrollierst.</p>
+
+                <h4>3. Nutzungsbeschränkungen</h4>
+                <p>Du darfst NICHT:</p>
+                <ul>
+                    <li>❌ Die App hacken oder modifizieren</li>
+                    <li>❌ Quellcode extrahieren oder reverse-engineern</li>
+                    <li>❌ Die App kommerziell nutzen ohne Erlaubnis</li>
+                    <li>❌ Andere Nutzer schaden/belästigen</li>
+                    <li>❌ Illegale Aktivitäten durchführen</li>
+                    <li>❌ Malware/Viren verbreiten</li>
+                </ul>
+
+                <h4>4. Deine Inhalte</h4>
+                <p>Alle Daten die du eingibst gehören DIR. Sie sind deine Verantwortung und sollten nicht illegal/verletzend sein. Wir haben das Recht, illegale Inhalte zu löschen.</p>
+
+                <h4>5. Verfügbarkeit der App</h4>
+                <ul>
+                    <li>Die App ist "as-is" bereitgestellt</li>
+                    <li>Wir garantieren KEINE ständige Verfügbarkeit</li>
+                    <li>Wir können Wartungen durchführen</li>
+                    <li>Wir können die App jederzeit ändern/beenden</li>
+                </ul>
+
+                <h4>6. Haftungsausschluss</h4>
+                <p><strong>Weder die App noch wir sind haftbar für:</strong></p>
+                <ul>
+                    <li>❌ Datenverlust</li>
+                    <li>❌ Unterbrochene Dienste</li>
+                    <li>❌ Indirekte/Folgeschäden</li>
+                    <li>❌ Fehler in den Funktionen</li>
+                </ul>
+                <p><strong>Du nutzt die App AUF DEIN EIGENES RISIKO.</strong></p>
+
+                <h4>7. Haftungsbegrenzung</h4>
+                <p>Unsere Haftung ist begrenzt auf die von dir bezahlten Gebühren oder 0 EUR (falls kostenlos). Das ist die MAXIMALE Haftung.</p>
+
+                <h4>8. Zahlungen & Pro-Features</h4>
+                <ul>
+                    <li>✅ Zahlungen sind nicht rückerstattbar</li>
+                    <li>✅ Abos erneuern sich automatisch</li>
+                    <li>✅ Du kannst jederzeit kündigen</li>
+                    <li>✅ Preisänderungen werden angekündigt</li>
+                </ul>
+
+                <h4>9. Geistige Eigentumsrechte</h4>
+                <ul>
+                    <li>✅ Wir besitzen den LifeTracker Code</li>
+                    <li>✅ Wir besitzen das Logo/Design</li>
+                    <li>✅ Du darfst diese NICHT kopieren/nutzen</li>
+                </ul>
+
+                <h4>10. Beendigung</h4>
+                <p>Wir können deinen Zugang beenden wenn du Bedingungen verletzt, illegale Aktivitäten durchführst oder die App missbrauchst.</p>
+
+                <h4>11. Änderungen der Bedingungen</h4>
+                <p>Wir können diese Bedingungen ändern. Wir werden dich vorher benachrichtigen. Fortgesetzte Nutzung = Akzeptanz der neuen Bedingungen.</p>
+
+                <h4>12. Geltendes Recht</h4>
+                <p>Diese Bedingungen unterliegen deutschem und EU-Recht. Streitigkeiten werden in einem deutschen Gericht verhandelt.</p>
+
+                <h4>13. Kontakt</h4>
+                <p>Bei Fragen zu diesen Bedingungen: glockenhammer3301+support@gmail.com</p>
+
+                <p style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px;">
+                    <strong>Aktualisiert:</strong> Oktober 2025
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="document.getElementById('termsModal').style.display='none';">Verstanden</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/support.js"></script>
+    <script src="js/language.js"></script>
+    <script src="js/tutorial.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/tracker.js"></script>
+    <script src="js/habits.js"></script>
+    <script src="js/stamina.js"></script>
+    <script src="js/strength.js"></script>
+    <script src="js/finance.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/overview.js"></script>
+    <script src="js/achievements.js"></script>
+    <script src="js/weekly-summary.js"></script>
+    <script src="js/mood-journal.js"></script>
+    <script src="js/swipe.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/ads-system.js"></script>
+
+    <!-- Alternative CDN: -->
+    <script src="https://unpkg.com/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+    <script src="js/pdf-translations.js"></script>
+    <script src="js/pdf-export.js"></script>
+    <!-- PRO VERSION SYSTEM -->
+
+    <script src="js/pro-system.js"></script>
+    <script src="js/admob-integration.js"></script>
+
+</body>
+</html>

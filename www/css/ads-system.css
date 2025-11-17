@@ -1,0 +1,65 @@
+/* Remove Ads Button - EXACT SAME AS SUPPORT BUTTON */
+.remove-ads-btn {
+    position: absolute;
+    top: 75px;
+    left: 25px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #16213e 0%, #1a2842 100%);
+    border: 2px solid #2a3f5f;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 0;
+    line-height: 1;
+    color: white;
+}
+
+.remove-ads-btn:hover {
+    border-color: #ff4757;
+    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+    transform: translateY(-2px);
+}
+
+.remove-ads-btn:active {
+    transform: scale(0.95);
+}
+
+/* When purchased - green */
+.remove-ads-btn.purchased {
+    border-color: #00d2a0;
+}
+
+.remove-ads-btn.purchased:hover {
+    border-color: #00d2a0;
+}
+
+@media (max-width: 380px) {
+    .remove-ads-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+}
+
+/* AD-OVERLAY KOMPLETT UNSICHTBAR MACHEN */
+#adModal,
+.modal[id*="ad"],
+.modal[class*="ad"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -9999 !important;
+}
+
+/* Falls Modal per Klasse */
+.modal.show#adModal {
+    display: none !important;
+}
