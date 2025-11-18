@@ -43,10 +43,7 @@ jobs:
       run: cordova platform add android
     
     - name: Update SDK Version
-      run: |
-        cd platforms/android
-        sed -i 's/"SDK_VERSION":33/"SDK_VERSION":35/g' cdv-gradle-config.json
-        sed -i 's/"COMPILE_SDK_VERSION":null/"COMPILE_SDK_VERSION":35/g' cdv-gradle-config.json
+      run: bash update-sdk.sh
     
     - name: Build release
       run: cordova build android --release
