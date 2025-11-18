@@ -46,7 +46,12 @@ jobs:
       run: bash update-sdk.sh
     
     - name: Build release
-      run: cordova build android --release
+      run: |
+        cd platforms/android/app
+        sed -i 's/targetSdkVersion cordovaConfig.SDK_VERSION/targetSdkVersion 35/g' build.gradle
+        sed -i 's/compileSdkVersion cordovaConfig.COMPILE_SDK_VERSION/compileSdkVersion 35/g' build.gradle
+        cd ../..
+        cordova build android --release
     
     - name: Upload AAB
       uses: actions/upload-artifact@v4
